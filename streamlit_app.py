@@ -18,7 +18,6 @@ from langchain.chains import create_retrieval_chain
 from pydantic import SecretStr
 from langchain_huggingface import HuggingFaceEndpointEmbeddings
 from chromadb import PersistentClient
-print(f"LangChain version: {langchain.__version__}") # 0.3.27
 from chromadb.config import Settings
 from chromadb import PersistentClient
 import chromadb
