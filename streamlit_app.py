@@ -87,24 +87,26 @@ if asked_question:
     result = retriever_chain.invoke({
         "input": asked_question
     })
+    try:
+        unique_set = set()
+        source_text = "Kaynaklar:\n"
 
-    unique_set = set()
-    source_text = "Kaynaklar:\n"
+        responseofAI = result["answer"]  # cevabı al
+        source_docs = result["source_documents"]  # kaynakları al
 
-    responseofAI = result["result"]  # cevabı al
-    source_docs = result["source_documents"]  # kaynakları al
+        for doc in source_docs:
+            title = doc.metadata.get("source", "bilinmeyen")  # metadata içinden source alanı
+            if title not in unique_set:
+                unique_set.add(title)
+                source_text += f"- {title}\n"
 
-    for doc in source_docs:
-        title = doc.metadata.get("source", "bilinmeyen")  # metadata içinden source alanı
-        if title not in unique_set:
-            unique_set.add(title)
-            source_text += f"- {title}\n"
+        with st.chat_message("assistant"):
+            st.markdown(responseofAI)
+            st.session_state.messages.append(AIMessage(content=responseofAI))
+            st.session_state.messages.append(AIMessage(content=source_text))
 
-    with st.chat_message("assistant"):
-        st.markdown(responseofAI)
-        st.session_state.messages.append(AIMessage(content=responseofAI))
-        st.session_state.messages.append(AIMessage(content=source_text))
-
+    except Exception as Hata:
+        print("Hata Var : ",Hata)
     # py -m streamlit run streamlit_app.py 
     # gitattiributes deleted
     # düzenleme
