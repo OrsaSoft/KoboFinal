@@ -88,12 +88,22 @@ if asked_question:
     result = retriever_chain.invoke({
         "input": asked_question
     })
+
+    unique_set = set()
+    source_text = "Kaynaklar \n"
+
     responseofAI = result["answer"]
+    for doc in responseofAI["source_documents"]:
+        title = doc.metadata
+        if title not in unique_set:
+            unique_set.add(title)
+            source_text += title
+
 
     with st.chat_message("assistant"):
         st.markdown(responseofAI)
         st.session_state.messages.append(AIMessage(content=responseofAI))
-
+        st.session_state.messages.append(AIMessage(content=source_text))
     # py -m streamlit run streamlit_app.py 
     # gitattiributes deleted
     # düzenleme
