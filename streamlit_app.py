@@ -37,8 +37,7 @@ embeddings = OllamaEmbeddings(model="mxbai-embed-large:latest")
 # embeddings = HuggingFaceInferenceAPIEmbeddings(model_name="mixedbread-ai/mxbai-embed-large-v1",api_key="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",api_url="https://huggingface.co/mixedbread-ai/deepset-mxbai-embed-de-large-v1?library=sentence-transformers")
 embeddings = HuggingFaceEndpointEmbeddings(model="mixedbread-ai/mxbai-embed-large-v1",huggingfacehub_api_token="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")
 
-client = PersistentClient(path="./vectordb")
-db = client.get_or_create_collection(name="my_collection",metadata={"tenant" : "default_tenant","database" : "default_database"})
+
 
 # vectordb was deleted
 api_key = os.environ.get("oJ6wgJeUMlciaLyoojF2OUancT1FoOAe")
