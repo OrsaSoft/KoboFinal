@@ -24,7 +24,7 @@ from langchain_huggingface import HuggingFaceEndpointEmbeddings
 from chromadb import PersistentClient
 print(f"LangChain version: {langchain.__version__}") # 0.3.27
 from chromadb.config import Settings
-
+from chromadb import PersistentClient
 
 
 # api_key = os.environ.get("OLLAMA_API_KEY")
@@ -38,15 +38,14 @@ embeddings = OllamaEmbeddings(model="mxbai-embed-large:latest")
 embeddings = HuggingFaceEndpointEmbeddings(model="mixedbread-ai/mxbai-embed-large-v1",huggingfacehub_api_token="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")
 
 
-chroma_settings = Settings(
-    chroma_db_impl="duckdb+parquet",
-    persist_directory="./vectordb"
-)
+
 
 # vectordb was deleted
 api_key = os.environ.get("oJ6wgJeUMlciaLyoojF2OUancT1FoOAe")
-db_path = "vectordb"
-vector_db = Chroma(persist_directory=db_path,embedding_function=embeddings,client_settings=chroma_settings)
+db_path = "./vectordb"
+client = PersistentClient(path=db_path)
+
+vector_db = Chroma(client=client,collection_name="My_Colletion",embedding_function=embeddings)
 
 
 if "messages" not in st.session_state:
