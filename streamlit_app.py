@@ -89,20 +89,22 @@ if asked_question:
     })
 
     unique_set = set()
-    source_text = "Kaynaklar \n"
+    source_text = "Kaynaklar:\n"
 
-    responseofAI = result["answer"]
-    for doc in responseofAI["source_documents"]:
-        title = doc.metadata
+    responseofAI = result["result"]  # cevabı al
+    source_docs = result["source_documents"]  # kaynakları al
+
+    for doc in source_docs:
+        title = doc.metadata.get("source", "bilinmeyen")  # metadata içinden source alanı
         if title not in unique_set:
             unique_set.add(title)
-            source_text += title
-
+            source_text += f"- {title}\n"
 
     with st.chat_message("assistant"):
         st.markdown(responseofAI)
         st.session_state.messages.append(AIMessage(content=responseofAI))
         st.session_state.messages.append(AIMessage(content=source_text))
+
     # py -m streamlit run streamlit_app.py 
     # gitattiributes deleted
     # düzenleme
