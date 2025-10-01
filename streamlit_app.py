@@ -91,3 +91,4 @@ if asked_question:
 
     # py -m streamlit run streamlit_app.py 
     # gitattiributes deleted
+    # düzenleme
