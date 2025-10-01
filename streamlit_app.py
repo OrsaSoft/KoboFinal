@@ -36,7 +36,7 @@ embeddings = HuggingFaceEndpointEmbeddings(model="mixedbread-ai/mxbai-embed-larg
 
 client = chromadb.PersistentClient(path=db_path)
 
-collection = client.get_or_create_collection("My_Collection")
+vector_db = client.get_or_create_collection(name="My_Collection",metadata={"tenant" : "default_tenant","database" : "default_database"})
 
 
 # vectordb was deleted
@@ -44,7 +44,7 @@ api_key = os.environ.get("oJ6wgJeUMlciaLyoojF2OUancT1FoOAe")
 
 
 
-vector_db = Chroma(embedding_function=embeddings,client=client,persist_directory=db_path,collection_name=collection)
+# vector_db = Chroma(embedding_function=embeddings,client=client,persist_directory=db_path,collection_name=collection)
 
 
 if "messages" not in st.session_state:
