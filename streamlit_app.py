@@ -46,7 +46,7 @@ chroma_settings = Settings(
 # vectordb was deleted
 api_key = os.environ.get("oJ6wgJeUMlciaLyoojF2OUancT1FoOAe")
 db_path = "vectordb"
-vector_db = Chroma(persist_directory=db_path,embedding_function=embeddings)
+vector_db = Chroma(persist_directory=db_path,embedding_function=embeddings,client_settings=chroma_settings)
 
 
 if "messages" not in st.session_state:
