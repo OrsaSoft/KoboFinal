@@ -21,8 +21,11 @@ from langchain.chains import create_retrieval_chain
 from langchain.embeddings.huggingface import HuggingFaceInferenceAPIEmbeddings
 from pydantic import SecretStr
 from langchain_huggingface import HuggingFaceEndpointEmbeddings
-
+from chromadb import PersistentClient
 print(f"LangChain version: {langchain.__version__}") # 0.3.27
+
+
+
 
 # api_key = os.environ.get("OLLAMA_API_KEY")
 
@@ -33,6 +36,9 @@ secret_str_api_key = huggingface_api_key.get_secret_value()
 embeddings = OllamaEmbeddings(model="mxbai-embed-large:latest")
 # embeddings = HuggingFaceInferenceAPIEmbeddings(model_name="mixedbread-ai/mxbai-embed-large-v1",api_key="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",api_url="https://huggingface.co/mixedbread-ai/deepset-mxbai-embed-de-large-v1?library=sentence-transformers")
 embeddings = HuggingFaceEndpointEmbeddings(model="mixedbread-ai/mxbai-embed-large-v1",huggingfacehub_api_token="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")
+
+client = PersistentClient(path="./vectordb")
+db = client.get_or_create_collection(name="my_collection",metadata={"tenant" : "default_tenant","database" : "default_database"})
 
 # vectordb was deleted
 api_key = os.environ.get("oJ6wgJeUMlciaLyoojF2OUancT1FoOAe")
