@@ -2,14 +2,11 @@
 import time as tm
 from langchain_ollama import OllamaEmbeddings
 from langchain.vectorstores import Chroma
-from langchain.document_loaders import TextLoader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
 from langchain.agents.agent_toolkits import create_retriever_tool
 import langchain
-# from langchain_community.embeddings import OllamaEmbeddings
 from hashlib import sha256
 import os
 from langchain.embeddings import HuggingFaceEmbeddings
@@ -18,7 +15,6 @@ import streamlit as st
 from langchain_core.messages import HumanMessage,AIMessage,SystemMessage
 from langchain import hub
 from langchain.chains import create_retrieval_chain
-from langchain.embeddings.huggingface import HuggingFaceInferenceAPIEmbeddings
 from pydantic import SecretStr
 from langchain_huggingface import HuggingFaceEndpointEmbeddings
 from chromadb import PersistentClient
@@ -42,10 +38,10 @@ embeddings = HuggingFaceEndpointEmbeddings(model="mixedbread-ai/mxbai-embed-larg
 
 # vectordb was deleted
 api_key = os.environ.get("oJ6wgJeUMlciaLyoojF2OUancT1FoOAe")
-db_path = "./vectordb"
-client = PersistentClient(path=db_path)
+# db_path = "./vectordb"
+# client = PersistentClient(path=db_path)
 
-vector_db = Chroma(client=client,collection_name="My_Colletion",embedding_function=embeddings)
+vector_db = Chroma(collection_name="My_Colletion",embedding_function=embeddings)
 
 
 if "messages" not in st.session_state:
