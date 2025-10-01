@@ -34,9 +34,11 @@ embeddings = OllamaEmbeddings(model="mxbai-embed-large:latest")
 # embeddings = HuggingFaceInferenceAPIEmbeddings(model_name="mixedbread-ai/mxbai-embed-large-v1",api_key="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",api_url="https://huggingface.co/mixedbread-ai/deepset-mxbai-embed-de-large-v1?library=sentence-transformers")
 embeddings = HuggingFaceEndpointEmbeddings(model="mixedbread-ai/mxbai-embed-large-v1",huggingfacehub_api_token="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")
 
-client = chromadb.PersistentClient(path=db_path)
+client = PersistentClient(path=db_path)
 
-vector_db = client.get_or_create_collection(name="My_Collection",metadata={"tenant" : "default_tenant","database" : "default_database"})
+
+
+vector_db = Chroma(client=client,embedding_function=embeddings,collection_name="My_Collection")
 
 
 # vectordb was deleted
@@ -58,6 +60,7 @@ prompt = ChatPromptTemplate.from_messages([
         ("human"),("{input}")
 
 ])
+
 
 # Geçmiş mesajları göster
 for message in st.session_state.messages:
