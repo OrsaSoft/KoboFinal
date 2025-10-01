@@ -21,27 +21,30 @@ from chromadb import PersistentClient
 print(f"LangChain version: {langchain.__version__}") # 0.3.27
 from chromadb.config import Settings
 from chromadb import PersistentClient
-
+import chromadb
 
 # api_key = os.environ.get("OLLAMA_API_KEY")
 
 huggingface_api_key = SecretStr("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")
 secret_str_api_key = huggingface_api_key.get_secret_value()
 
+db_path = "./vectordb"
 
 embeddings = OllamaEmbeddings(model="mxbai-embed-large:latest")
 # embeddings = HuggingFaceInferenceAPIEmbeddings(model_name="mixedbread-ai/mxbai-embed-large-v1",api_key="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",api_url="https://huggingface.co/mixedbread-ai/deepset-mxbai-embed-de-large-v1?library=sentence-transformers")
 embeddings = HuggingFaceEndpointEmbeddings(model="mixedbread-ai/mxbai-embed-large-v1",huggingfacehub_api_token="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")
 
+client = chromadb.PersistentClient(path=db_path)
 
+collection = client.get_or_create_collection("My_Collection")
 
 
 # vectordb was deleted
 api_key = os.environ.get("oJ6wgJeUMlciaLyoojF2OUancT1FoOAe")
-# db_path = "./vectordb"
-# client = PersistentClient(path=db_path)
 
-vector_db = Chroma(collection_name="My_Colletion",embedding_function=embeddings)
+
+
+vector_db = Chroma(embedding_function=embeddings,client=client,persist_directory=db_path,collection_name=collection)
 
 
 if "messages" not in st.session_state:
