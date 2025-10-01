@@ -21,6 +21,8 @@ from chromadb import PersistentClient
 from chromadb.config import Settings
 from chromadb import PersistentClient
 import chromadb
+from langchain.chains import ConversationalRetrievalChain
+
 
 # api_key = os.environ.get("OLLAMA_API_KEY")
 
@@ -31,14 +33,13 @@ db_path = "./vectordb"
 
 hg_api_key = os.getenv("HP_Token")
 
-# embeddings = HuggingFaceInferenceAPIEmbeddings(model_name="mixedbread-ai/mxbai-embed-large-v1",api_key="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",api_url="https://huggingface.co/mixedbread-ai/deepset-mxbai-embed-de-large-v1?library=sentence-transformers")
 embeddings = HuggingFaceEndpointEmbeddings(model="mixedbread-ai/mxbai-embed-large-v1",huggingfacehub_api_token=hg_api_key)
 
 
 
 
 
-vector_db = Chroma(embedding_function=embeddings,collection_name="My_Collection")
+vector_db = Chroma(embedding_function=embeddings,persist_directory=db_path)
 
 
 # vectordb was deleted
@@ -82,7 +83,7 @@ if asked_question:
 
     llm = ChatMistralAI(model_name="magistral-small-2509",api_key="oJ6wgJeUMlciaLyoojF2OUancT1FoOAe")
     document_chain = create_stuff_documents_chain(llm=llm,prompt=prompt)
-    retriever = vector_db.as_retriever()
+    retriever = vector_db.as_retriever(search_kwargs={"k": 3})
     retriever_chain = create_retrieval_chain(retriever,document_chain)
     result = retriever_chain.invoke({
         "input": asked_question
@@ -92,18 +93,23 @@ if asked_question:
         source_text = "Kaynaklar:\n"
 
         responseofAI = result["answer"]  # cevabı al
-        source_docs = result["source_documents"]  # kaynakları al
+        for key in list(result.keys()):
+            print("Value of Key : ",key)
+        
+        
 
-        for doc in source_docs:
-            title = doc.metadata.get("source", "bilinmeyen")  # metadata içinden source alanı
-            if title not in unique_set:
-                unique_set.add(title)
-                source_text += f"- {title}\n"
+        # source_docs = result["source_documents"]  # kaynakları al
+
+        # for doc in source_docs:
+        #     title = doc.metadata.get("source", "bilinmeyen")  # metadata içinden source alanı
+        #     if title not in unique_set:
+        #         unique_set.add(title)
+        #         source_text += f"- {title}\n"
 
         with st.chat_message("assistant"):
             st.markdown(responseofAI)
             st.session_state.messages.append(AIMessage(content=responseofAI))
-            st.session_state.messages.append(AIMessage(content=source_text))
+            # st.session_state.messages.append(AIMessage(content=source_text))
 
     except Exception as Hata:
         print("Hata Var : ",Hata)
