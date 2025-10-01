@@ -30,7 +30,7 @@ secret_str_api_key = huggingface_api_key.get_secret_value()
 
 db_path = "./vectordb"
 
-embeddings = OllamaEmbeddings(model="mxbai-embed-large:latest")
+
 # embeddings = HuggingFaceInferenceAPIEmbeddings(model_name="mixedbread-ai/mxbai-embed-large-v1",api_key="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",api_url="https://huggingface.co/mixedbread-ai/deepset-mxbai-embed-de-large-v1?library=sentence-transformers")
 embeddings = HuggingFaceEndpointEmbeddings(model="mixedbread-ai/mxbai-embed-large-v1",huggingfacehub_api_token="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")
 
