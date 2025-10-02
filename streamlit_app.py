@@ -39,7 +39,11 @@ embeddings = HuggingFaceEndpointEmbeddings(model="mixedbread-ai/mxbai-embed-larg
 
 
 
-vector_db = Chroma(embedding_function=embeddings,persist_directory=db_path)
+vector_db = Chroma(embedding_function=embeddings,persist_directory=db_path,client_settings=Settings(
+    persist_directory=db_path,
+    is_persistent=True,
+    allow_reset=True
+))
 
 
 # vectordb was deleted
