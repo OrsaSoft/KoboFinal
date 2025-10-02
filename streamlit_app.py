@@ -33,7 +33,7 @@ db_path = "./vectordb"
 
 hg_api_key = os.getenv("HP_Token")
 
-embeddings = HuggingFaceEndpointEmbeddings(model="mixedbread-ai/mxbai-embed-large-v1",huggingfacehub_api_token=hg_api_key)
+embeddings = HuggingFaceEndpointEmbeddings(model="mixedbread-ai/mxbai-embed-large-v1",huggingfacehub_api_token="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")
 
 
 
