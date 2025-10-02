@@ -41,10 +41,11 @@ embeddings = HuggingFaceEndpointEmbeddings(model="mixedbread-ai/mxbai-embed-larg
 
 vector_db = Chroma(
     embedding_function=embeddings,
-    persist_directory=None,   # disk yerine RAM kullan
+    persist_directory=db_path,   # disk yerine RAM kullan
     client_settings=Settings(
         is_persistent=False,
-        allow_reset=True
+        allow_reset=True,
+        persist_directory = db_path
     )
 )
 
