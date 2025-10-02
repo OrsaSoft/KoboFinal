@@ -18,10 +18,11 @@ from langchain.chains import create_retrieval_chain
 from pydantic import SecretStr
 from langchain_huggingface import HuggingFaceEndpointEmbeddings
 from chromadb import PersistentClient
-print(f"LangChain version: {langchain.__version__}") # 0.3.27
 from chromadb.config import Settings
 from chromadb import PersistentClient
 import chromadb
+from langchain.chains import ConversationalRetrievalChain
+
 
 # api_key = os.environ.get("OLLAMA_API_KEY")
 
@@ -30,15 +31,19 @@ secret_str_api_key = huggingface_api_key.get_secret_value()
 
 db_path = "./vectordb"
 
+hg_api_key = os.getenv("HP_Token")
 
-# embeddings = HuggingFaceInferenceAPIEmbeddings(model_name="mixedbread-ai/mxbai-embed-large-v1",api_key="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",api_url="https://huggingface.co/mixedbread-ai/deepset-mxbai-embed-de-large-v1?library=sentence-transformers")
-embeddings = HuggingFaceEndpointEmbeddings(model="mixedbread-ai/mxbai-embed-large-v1",huggingfacehub_api_token="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")
-
-
+embeddings = HuggingFaceEndpointEmbeddings(model="mixedbread-ai/mxbai-embed-large-v1",huggingfacehub_api_token=hg_api_key)
 
 
 
-vector_db = Chroma(embedding_function=embeddings,collection_name="My_Collection")
+
+
+vector_db = Chroma(embedding_function=embeddings,persist_directory=db_path,client_settings=Settings(
+    persist_directory=db_path,
+    is_persistent=True,
+    allow_reset=True
+))
 
 
 # vectordb was deleted
@@ -82,17 +87,36 @@ if asked_question:
 
     llm = ChatMistralAI(model_name="magistral-small-2509",api_key="oJ6wgJeUMlciaLyoojF2OUancT1FoOAe")
     document_chain = create_stuff_documents_chain(llm=llm,prompt=prompt)
-    retriever = vector_db.as_retriever()
+    retriever = vector_db.as_retriever(search_kwargs={"k": 3})
     retriever_chain = create_retrieval_chain(retriever,document_chain)
     result = retriever_chain.invoke({
         "input": asked_question
     })
-    responseofAI = result["answer"]
+    try:
+        unique_set = set()
+        source_text = "Kaynaklar:\n"
 
-    with st.chat_message("assistant"):
-        st.markdown(responseofAI)
-        st.session_state.messages.append(AIMessage(content=responseofAI))
+        responseofAI = result["answer"]  # cevabı al
+        for key in list(result.keys()):
+            print("Value of Key : ",key)
+        
+        
 
+        # source_docs = result["source_documents"]  # kaynakları al
+
+        # for doc in source_docs:
+        #     title = doc.metadata.get("source", "bilinmeyen")  # metadata içinden source alanı
+        #     if title not in unique_set:
+        #         unique_set.add(title)
+        #         source_text += f"- {title}\n"
+
+        with st.chat_message("assistant"):
+            st.markdown(responseofAI)
+            st.session_state.messages.append(AIMessage(content=responseofAI))
+            # st.session_state.messages.append(AIMessage(content=source_text))
+
+    except Exception as Hata:
+        print("Hata Var : ",Hata)
     # py -m streamlit run streamlit_app.py 
     # gitattiributes deleted
     # düzenleme
