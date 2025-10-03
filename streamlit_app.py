@@ -98,26 +98,15 @@ if asked_question:
         "input": asked_question
     })
     try:
-        unique_set = set()
-        source_text = "Kaynaklar:\n"
+        
 
         responseofAI = result["answer"]  # cevabı al
-        for key in list(result.keys()):
-            print("Value of Key : ",key)
-        
-        
-
-        # source_docs = result["source_documents"]  # kaynakları al
-
-        # for doc in source_docs:
-        #     title = doc.metadata.get("source", "bilinmeyen")  # metadata içinden source alanı
-        #     if title not in unique_set:
-        #         unique_set.add(title)
-        #         source_text += f"- {title}\n"
+        context = result["context"]
 
         with st.chat_message("assistant"):
             st.markdown(responseofAI)
             st.session_state.messages.append(AIMessage(content=responseofAI))
+            st.session_state.messages.append(AIMessage(content=context))
             # st.session_state.messages.append(AIMessage(content=source_text))
 
     except Exception as Hata:
