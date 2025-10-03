@@ -102,6 +102,7 @@ if asked_question:
 
         responseofAI = result["answer"]  # cevabı al
         context = result["context"]
+        print("Result İçeriği : ",result)
 
         with st.chat_message("assistant"):
             st.markdown(responseofAI)
