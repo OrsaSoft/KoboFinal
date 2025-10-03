@@ -107,7 +107,7 @@ if asked_question:
         with st.chat_message("assistant"):
             st.markdown(responseofAI)
             st.session_state.messages.append(AIMessage(content=responseofAI))
-            st.session_state.messages.append(AIMessage(content=context))
+            
             # st.session_state.messages.append(AIMessage(content=source_text))
 
     except Exception as Hata:
